@@ -23,7 +23,39 @@ jobs:
   find_exercise:
     if: github.head_ref != 'prepare-environment'
     name: Find Exercise Issue
-    uses: skills/exercise-toolkit/.github/workflows/find-exercise-issue.yml@v0.9.1
+    runs-on: ubuntu-latest
+    outputs:
+      issue-number: ${{ steps.find-exercise.outputs.issue-number }}
+      issue-url: ${{ steps.find-exercise.outputs.issue-url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Find exercise issue from README
+        id: find-exercise
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const readme = fs.readFileSync('README.md', 'utf8');
+            const issueMatch = readme.match(/\/issues\/(\d+)\)/);
+
+            if (!issueMatch) {
+              core.setFailed('Could not find the exercise issue link in README.md');
+              return;
+            }
+
+            const issue_number = Number(issueMatch[1]);
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number
+            });
+
+            core.info(`Exercise issue found: #${issue.number} (${issue.html_url})`);
+            core.setOutput('issue-number', issue.number);
+            core.setOutput('issue-url', issue.html_url);
 
   post_review_content:
     name: Post review content
