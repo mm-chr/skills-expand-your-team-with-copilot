@@ -320,10 +320,13 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       return "sports";
     } else if (
+      name.includes("manga") ||
       name.includes("art") ||
       name.includes("music") ||
       name.includes("theater") ||
       name.includes("drama") ||
+      desc.includes("manga") ||
+      desc.includes("graphic novel") ||
       desc.includes("creative") ||
       desc.includes("paint")
     ) {
