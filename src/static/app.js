@@ -336,6 +336,45 @@ document.addEventListener("DOMContentLoaded", () => {
     return details.schedule;
   }
 
+  function buildShareDetails(activityName, details, formattedSchedule) {
+    const activityUrl = `${window.location.origin}${window.location.pathname}?activity=${encodeURIComponent(
+      activityName
+    )}`;
+    const shareText = `Check out this school activity: ${activityName}! ${details.description} (${formattedSchedule})`;
+
+    return {
+      activityUrl,
+      shareText,
+      encodedUrl: encodeURIComponent(activityUrl),
+      encodedText: encodeURIComponent(shareText),
+    };
+  }
+
+  async function handleNativeShare(shareData) {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Mergington High School Activity",
+          text: shareData.shareText,
+          url: shareData.activityUrl,
+        });
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(
+          `${shareData.shareText} ${shareData.activityUrl}`
+        );
+        showMessage("Share text copied. Paste it to share with friends.", "info");
+      } else {
+        showMessage(
+          "Sharing is not available in this browser. Please copy the page link.",
+          "info"
+        );
+      }
+    } catch (error) {
+      console.error("Error sharing activity:", error);
+      showMessage("Unable to share this activity right now.", "error");
+    }
+  }
+
   // Function to determine activity type (this would ideally come from backend)
   function getActivityType(activityName, description) {
     const name = activityName.toLowerCase();
@@ -554,6 +593,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const shareData = buildShareDetails(name, details, formattedSchedule);
     const difficultyInfo = details.difficulty
       ? `<p><strong>Difficulty:</strong> ${details.difficulty}</p>`
       : "";
@@ -612,6 +652,29 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="share-actions">
+        <button class="share-button native-share-button" data-activity="${name}">
+          Share
+        </button>
+        <a
+          class="share-link-button"
+          href="https://twitter.com/intent/tweet?text=${shareData.encodedText}&url=${shareData.encodedUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on X"
+        >
+          X
+        </a>
+        <a
+          class="share-link-button"
+          href="https://www.facebook.com/sharer/sharer.php?u=${shareData.encodedUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on Facebook"
+        >
+          Facebook
+        </a>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -646,6 +709,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    const nativeShareButton = activityCard.querySelector(".native-share-button");
+    nativeShareButton.addEventListener("click", () => {
+      handleNativeShare(shareData);
+    });
 
     activitiesList.appendChild(activityCard);
   }
