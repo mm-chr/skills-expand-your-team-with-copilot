@@ -48,6 +48,7 @@ initial_activities = {
     },
     "Programming Class": {
         "description": "Learn programming fundamentals and build software projects",
+        "difficulty": "Beginner",
         "schedule": "Tuesdays and Thursdays, 7:00 AM - 8:00 AM",
         "schedule_details": {
             "days": ["Tuesday", "Thursday"],
@@ -70,6 +71,7 @@ initial_activities = {
     },
     "Soccer Team": {
         "description": "Join the school soccer team and compete in matches",
+        "difficulty": "Intermediate",
         "schedule": "Tuesdays and Thursdays, 3:30 PM - 5:30 PM",
         "schedule_details": {
             "days": ["Tuesday", "Thursday"],
@@ -125,6 +127,7 @@ initial_activities = {
     },
     "Math Club": {
         "description": "Solve challenging problems and prepare for math competitions",
+        "difficulty": "Intermediate",
         "schedule": "Tuesdays, 7:15 AM - 8:00 AM",
         "schedule_details": {
             "days": ["Tuesday"],
@@ -147,6 +150,7 @@ initial_activities = {
     },
     "Weekend Robotics Workshop": {
         "description": "Build and program robots in our state-of-the-art workshop",
+        "difficulty": "Advanced",
         "schedule": "Saturdays, 10:00 AM - 2:00 PM",
         "schedule_details": {
             "days": ["Saturday"],
@@ -158,6 +162,7 @@ initial_activities = {
     },
     "Science Olympiad": {
         "description": "Weekend science competition preparation for regional and state events",
+        "difficulty": "Advanced",
         "schedule": "Saturdays, 1:00 PM - 4:00 PM",
         "schedule_details": {
             "days": ["Saturday"],
